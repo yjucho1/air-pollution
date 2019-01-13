@@ -1,0 +1,170 @@
+{% extends "dashboard/layout.html" %}
+{% load dashboard_extras %}
+
+{% block title %}
+{% with last=recent_data.last %}
+Air Pollution - {{ last.stnfk.stationname }}
+{% endwith %}
+{% endblock %}
+
+
+{% block main %}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    {% with last=recent_data.last %}
+    <h1 class="h2">{{ last.stnfk.stationname }}</h1>
+    {% endwith %}
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group mr-2">
+        <button class="btn btn-sm btn-outline-secondary">Share</button>
+        <button class="btn btn-sm btn-outline-secondary">Export</button>
+      </div>
+      <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+        <span data-feather="calendar"></span>
+        This week
+      </button>
+    </div>
+  </div>
+
+  {% with last=recent_data.last %}
+  <p>측정소 주소 : {{ last.stnfk.addr }}</p>
+  <p>측정망 : {{ last.mangname }}</p>
+  <p>마지막 데이터 수신 시각 : {{ last.datatime |date:"Y-m-d H:i" }} </p> <br>
+  <div class="row">
+    <div class = col-sm-2>
+      <h6>미세먼지 등급</h6>
+    </div>
+    <div class = col-sm-2>
+      {% if last.pm10value <= 30 %}
+      <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">좋음</div>
+      </div>
+      {% endif %}
+      {% if last.pm10value > 30 and last.pm10value <= 80 %}
+      <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">보통</div>
+      </div>
+      {% endif %}
+      {% if last.pm10value > 80 and last.pm10value <= 150 %}
+      <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">나쁨</div>
+      </div>
+    {% endif %}
+    {% if last.pm10value > 150 and last.pm10value <= 600 %}
+    <div class="progress">
+      <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+      <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+      <div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+      <div class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">매우나쁨</div>
+    </div>
+    {% endif %}
+  </div>
+    <div class = col-sm-2>
+      <h6>초미세먼지 등급</h6>
+    </div>
+    <div class = col-sm-2>
+      {% if last.pm25value <= 15 %}
+      <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">좋음</div>
+      </div>
+      {% endif %}
+      {% if last.pm25value > 15 and last.pm25value <= 35 %}
+      <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">보통</div>
+      </div>
+      {% endif %}
+      {% if last.pm25value > 35 and last.pm25value <= 75 %}
+      <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">나쁨</div>
+      </div>
+    </div>
+    {% endif %}
+    {% if last.pm25value > 75 and last.pm25value <= 500 %}
+    <div class="progress">
+      <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+      <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+      <div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+      <div class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">매우나쁨</div>
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+  <canvas class="my-4 w-100" id="myChart" width="900" height="250"></canvas>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script>
+  var ctx = document.getElementById("myChart");
+  var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [{% for data in recent_data %}'{{ data.datatime |date:"m/d H:i"}}',{% endfor %}
+                {% for data in forecast_dt %}'{{ data |date:"m/d H:i"}}',{% endfor %}],
+      datasets: [{
+        label: "PM2.5",
+        data: [{% for data in recent_data %}'{{ data.pm25value }}',{% endfor %}],
+        fill: false,
+        backgroundColor: '#999',
+        borderColor: '#999',
+        borderWidth: 4,
+        pointBackgroundColor: '#999'
+      },
+      {
+        label: "forecast - PM 2.5",
+        data: [{% for data in recent_data %}'-',{% endfor %}
+        {% for data in forecast %}'{{ data }}',{% endfor %}],
+        fill: false,
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        borderWidth: 4,
+        pointBackgroundColor: 'rgb(255, 99, 132)'
+      },
+      {
+        label: "PM10",
+        data: [{% for data in recent_data %}'{{ data.pm10value }}',{% endfor %}],
+        fill: false,
+        backgroundColor: '#007bff',
+        borderColor: '#007bff',
+        borderWidth: 4,
+        pointBackgroundColor: '#007bff'
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+                  display: true,
+                  scaleLabel: {
+                      display: true
+                  }
+              }],
+        yAxes: [{
+            display: true,
+            scaleLabel: {
+                display: true,
+                labelString: 'Value (㎍/㎥)'
+            },
+            ticks: {
+                beginAtZero: true
+            }
+        }]
+
+      },
+      legend: {
+        display: true ,
+      },
+      hover: {
+					mode: 'nearest',
+					intersect: true
+      }
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+
+
+{% block title %}
+Air Pollution - 전국 미세먼지 현황
+{% endblock %}
+
+{% block leaflet %}
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+  integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+  crossorigin=""></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+  crossorigin=""/>
+<script src="{% static 'dashboard/leaflet.heat.js' %}"></script>
+ <style>
+    #map{ height: 80%}
+    #map2{ height: 80%}
+  </style>
+{% endblock %}
+
+
+{% block main %}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div class="row">
+    <div class="col-sm-6">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Current</h1>
+        </div>
+
+        <div class="container">
+            <span class="badge badge-secondary">{% with last=recent_data.last %}{{ last.datatime |date:"Y-m-d H:i" }}{% endwith %}</span>
+            <br>
+            <div id="map"></div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Forecasting</h1>
+        </div>
+        <div class="container">
+            <span class="badge badge-primary">{% with last=forecast_data.last %}{{ last.datatime |date:"Y-m-d H:i" }}{% endwith %}</span>
+            <br>
+            <div id="map2"></div>
+        </div>
+    </div>
+    </div>
+    <script>
+
+      // initialize the map
+      var map = L.map('map',{
+            minZoom: 3,
+            maxZoom: 10,
+            center:[36.475569,127.9903603],
+            zoom:7
+            });
+
+      // load a tile layer
+      L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+          attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          maxZoom: 10,
+          minZoom: 3
+        }).addTo(map);
+      var heat = L.heatLayer([{% for data in recent_data %}[{{ data.stnfk.dmx }},{{ data.stnfk.dmy }},{{ data.pm25value }}],{% endfor %}], { radius: 35, max:200 });;
+      map.addLayer(heat);
+
+      // initialize the map
+      var map2 = L.map('map2',{
+            minZoom: 3,
+            maxZoom: 10,
+            center:[36.475569,127.9903603],
+            zoom:7
+            });
+
+      // load a tile layer
+      L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+          attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          maxZoom: 10,
+          minZoom: 3
+        }).addTo(map2);
+      var heat = L.heatLayer([{% for data in forecast_data %}[{{ data.stnfk.dmx }},{{ data.stnfk.dmy }},{{ data.pm25value }}],{% endfor %}], { radius: 35, max:200 });;
+      map2.addLayer(heat);
+
+
+     </script>
+
+</main>
+{% endblock %}
+

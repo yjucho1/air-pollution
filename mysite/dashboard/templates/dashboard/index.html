@@ -1,0 +1,111 @@
+{% extends "dashboard/layout.html" %}
+
+{% block title %}
+Air Pollution Dashboard
+{% endblock %}
+
+{% block leaflet %}
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+  integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+  crossorigin=""></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+  crossorigin=""/>
+ <style>
+    #map{ height: 50%}
+  </style>
+{% endblock %}
+
+{% block main %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Dashboard</h1>
+  </div>
+
+  <div class="container">
+    <div class="row mb-3">
+        <div class="col-sm-3 py-2">
+            <div class="card bg-secondary text-white">
+                <div class="card-body bg-secondary">
+                    <div class="rotate">
+                        <i class="fas fa-map-marker-alt text-uppercase"> Total stations</i>
+                    </div>
+                    <h1 class="display-6">{{ num_of_stations }}</h1>
+                    <div align="right">
+                        <a href="{% url 'list_table' 'total'%}" class="badge badge-secondary"> More.. </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 py-2">
+            <div class="card bg-light text-black">
+                <div class="card-body bg-light">
+                    <div class="rotate">
+                        <i class="fas fa-grin-beam text-uppercase"> clean stations</i>
+                    </div>
+                    <h1 class="display-6">{{ num_of_clean }}</h1>
+                    <div align="right">
+                        <a href="{% url 'list_table' 'clean'%}" class="badge badge-light"> More.. </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 py-2">
+            <div class="card bg-dark text-white">
+                <div class="card-body bg-dark">
+                    <div class="rotate">
+                        <i class="fas fa-dizzy	text-uppercase"> polluted stations </i>
+                    </div>
+                    <h1 class="display-6">{{ num_of_polluted }}</h1>
+                    <div align="right">
+                        <a href="{% url 'list_table' 'polluted'%}" class="badge badge-dark"> More.. </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 py-2">
+            <div class="card bg-secondary text-white">
+                <div class="card-body bg-secondary">
+                    <div class="rotate">
+                        <i class="fas fa-exclamation-triangle text-uppercase"> failure stations</i>
+                    </div>
+                    <h1 class="display-6">{{ num_of_failure }}</h1>
+                    <div align="right">
+                        <a href="{% url 'list_table' 'failure'%}" class="badge badge-secondary"> More.. </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <h3>Map</h3>
+      <div class="container">
+        <div id="map"></div>
+      </div>
+    <script>
+
+      // initialize the map
+      var map = L.map('map',{
+            minZoom: 3,
+            maxZoom: 10,
+            center:[36.475569,127.9903603],
+            zoom:7
+            });
+
+      // load a tile layer
+      L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+          attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          maxZoom: 10,
+          minZoom: 3
+        }).addTo(map);
+      {% for station in stations %}
+      var content = `<h3>{{station.stationname}}</h3><p>{{station.addr}}</p><p>{{station.item}}</p><a href='detail/{{station.stationname}}'>상세보기</a>`;
+      L.marker([{{ station.dmx }},{{ station.dmy }}]).bindPopup(content).openPopup().addTo(map);
+      {% endfor %}
+
+     </script>
+
+</main>
+{% endblock %}

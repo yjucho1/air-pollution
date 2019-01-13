@@ -1,0 +1,116 @@
+{% extends "dashboard/layout.html" %}
+{% load static %}
+
+
+{% block title %}
+Air Pollution - 전국 측정소 통계
+{% endblock %}
+
+{% block leaflet %}
+{% endblock %}
+
+
+{% block main %}
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <div class="row">
+        <div class = col-sm-6>
+            <canvas class="my-4 w-100" id="mang_chart"></canvas>
+        </div>
+        <div class = col-sm-6>
+            <canvas class="my-4 w-100" id="area_chart"></canvas>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script>
+
+
+    var config = {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    {% for data in mangname_count %}'{{ data.total }}',{% endfor %}
+                ],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 205, 86)',
+                   'rgb(75, 192, 192)',
+                   'rgb( 54, 162, 235)',
+                ],
+            }],
+            labels: [
+                {% for data in mangname_count %}'{{ data.mangname }}',{% endfor %}
+            ]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'left',
+            },
+            title: {
+                display: true,
+                text: '측정망별 통계'
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    };
+
+    var ctx = document.getElementById("mang_chart");
+    var myDoughnutChart = new Chart(ctx, config);
+
+    var ctx = document.getElementById("area_chart");
+
+    var config = {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [
+                        {% for data in area_count %}'{{ data.total }}',{% endfor %}
+                    ],
+                    backgroundColor: [
+                        '#FF6384', '#FFCD56', '#4BC0C0', '#36A2EB', '#F78BAB', '#FFEC85', '#00B17B',
+                         '#6597FF', '#EB7C5E', '#fabebe', '#81B966', '#e6beff', '#FF8599', '#00C1AD',
+                          '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#a9a9a9', '#ffffff', '#000000'
+                    ],
+                }],
+                labels: [
+                    {% for data in area_count %}'{{ data.area }}',{% endfor %}
+                ]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'right',
+                },
+                title: {
+                    display: true,
+                    text: '지역별 통계'
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        };
+        var myDoughnutChart = new Chart(ctx, config);
+
+        function getRandomColorHex( v) {
+            var hex = "0123456789ABCDEF",
+                color = "#";
+            for (var i = 1; i <= 6; i++) {
+              color += hex[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+
+
+</script>
+{% endblock %}
+
