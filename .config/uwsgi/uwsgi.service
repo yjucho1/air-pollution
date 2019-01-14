@@ -3,7 +3,7 @@ Description=uWSGI service
 After=syslog.target
 
 [Service]
-ExecStart=/home/ubuntu/.pyenv/versions/uwsgi-env/bin/uwsgi -i /srv/PycharmProjects/.config/uwsgi/mysite.ini
+ExecStart=/home/ubuntu/.pyenv/versions/uwsgi-env/bin/uwsgi -i /srv/air-pollution/.config/uwsgi/mysite.ini
 
 Restart=always
 KillSignal=SIGQUIT

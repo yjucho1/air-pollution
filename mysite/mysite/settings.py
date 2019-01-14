@@ -43,7 +43,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     '.ap-northeast-2.compute.amazonaws.com',
-    '.yjucho.pe.kr',
+    'yjucho.pe.kr',
+    '54.180.51.18',
 ]
 
 
