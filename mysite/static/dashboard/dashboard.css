@@ -105,3 +105,12 @@ body {
 .mastfoot {
   color: rgba(255, 255, 255, .5);
 }
+
+.footer {
+  position: fixed;
+  left: 5;
+  bottom: -10;
+  width: 100%;
+  color: #6c757d;
+  text-align: left;
+}
