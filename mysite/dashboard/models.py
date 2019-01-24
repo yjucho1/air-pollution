@@ -41,3 +41,9 @@ class AirKoreaData(models.Model):
     stnfk = models.ForeignKey(AirKoreaStations, on_delete=models.CASCADE)
 
 
+class PredData(models.Model):
+    lat = models.DecimalField(db_column='lat', blank=True, null=True, decimal_places=10, max_digits=15)
+    lon = models.DecimalField(db_column='lon', blank=True, null=True, decimal_places=10, max_digits=15)
+    predValue = models.DecimalField(db_column='predValue', blank=True, null=True, decimal_places=10, max_digits=15)
+    type = models.TextField(db_column='type', blank=True, null=True)
+    dataTime = models.DateTimeField(db_column='dataTime', blank=True, null=True)

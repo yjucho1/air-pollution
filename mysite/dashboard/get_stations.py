@@ -24,7 +24,6 @@ def get_env_variable(setting):
 
 if __name__ == "__main__":
 
-    ## 1. 측정소 정보 가져오기
     cols = ['stationName', 'addr', 'year', 'oper', 'photo', 'map', 'mangName', 'item', 'dmX', 'dmY']
     OPEN_API_KEY = get_env_variable("OPEN_API_KEY")
     user_agent_url = 'http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/' + \

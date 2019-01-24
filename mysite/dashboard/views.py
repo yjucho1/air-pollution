@@ -1,12 +1,8 @@
 from django.shortcuts import render
-from .models import AirKoreaStations, AirKoreaData
+from .models import AirKoreaStations, AirKoreaData, PredData
 import datetime as dt
 from django.db.models import Count
 from django.db.models.functions import Substr
-import numpy as np
-import pandas as pd
-import requests
-import json
 
 def index(request):
     yesterday = dt.datetime.now().replace(microsecond=0,second=0,minute=0, hour=0)
@@ -31,32 +27,11 @@ def index(request):
 
 
 def detail(request, station_name):
-    yesterday = dt.datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
+    yesterday = dt.datetime.now().replace(microsecond=0, second=0, minute=0)
     recent_data = AirKoreaData.objects.filter(stnfk__stationname=station_name).\
-        filter(datatime__range=(yesterday - dt.timedelta(days=1), yesterday)).order_by('datatime')
-    try :
-        x = list(recent_data.values_list('pm25value', flat=True))
-        x = pd.Series(x[-24:])
-        x = x.interpolate()
-        x = np.array(x)
-        x = x.reshape(-1, 24, 1)
+        filter(datatime__range=(yesterday - dt.timedelta(days=5), yesterday)).order_by('datatime')
 
-        payload = {"instances": x.tolist()}
-        r = requests.post('http://localhost:8501/v1/models/lstm:predict', json=payload)
-        y_pred = json.loads(r.content.decode('utf-8'))
-        y_pred = y_pred['predictions'][0]
-        y_pred = [i * 200 for i in y_pred]
-
-        forecast_dt = []
-        for i in range(1, 7):
-            forecast_dt.append(yesterday + dt.timedelta(hours=i))
-    except :
-        recent_data = None
-        y_pred = None
-        forecast_dt = None
-
-    return render(request, "dashboard/detail.html", {'recent_data': recent_data, 'forecast': y_pred,
-                                                     'forecast_dt' : forecast_dt})
+    return render(request, "dashboard/detail.html", {'recent_data': recent_data})
 
 
 def list_table(request, status):
@@ -85,9 +60,9 @@ def stations_stat(request):
     return render(request, "dashboard/stat.html", {"mangname_count": mangname_count, "area_count" :area_count})
 
 def overall_map(request):
-    yesterday = dt.datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
+    yesterday = dt.datetime.now().replace(microsecond=0, second=0, minute=0)
     recent_data = AirKoreaData.objects.filter(datatime__range=(yesterday - dt.timedelta(hours=1), yesterday)).exclude(pm25value__isnull=True).order_by('datatime')
-    forecast_data = AirKoreaData.objects.filter(datatime__range=(yesterday+dt.timedelta(hours=5), yesterday + dt.timedelta(hours=6))).exclude(pm25value__isnull=True).order_by('datatime')
+    forecast_data = PredData.objects.filter(dataTime__range=(yesterday, yesterday + dt.timedelta(hours=1))).filter(predValue__gt=1)
 
     return render(request, "dashboard/map.html", {'recent_data' : recent_data, 'forecast_data':forecast_data})
 

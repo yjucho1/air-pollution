@@ -15,8 +15,8 @@ Air Pollution - 전국 미세먼지 현황
   crossorigin=""/>
 <script src="{% static 'dashboard/leaflet.heat.js' %}"></script>
  <style>
-    #map{ height: 80%}
-    #map2{ height: 80%}
+    #map{ height: 50%}
+    #map2{ height: 50%}
   </style>
 {% endblock %}
 
@@ -41,7 +41,7 @@ Air Pollution - 전국 미세먼지 현황
             <h1 class="h2">Forecasting</h1>
         </div>
         <div class="container">
-            <span class="badge badge-primary">{% with last=forecast_data.last %}{{ last.datatime |date:"Y-m-d H:i" }}{% endwith %}</span>
+            <span class="badge badge-primary">{% with last=forecast_data.last %}{{ last.dataTime |date:"Y-m-d H:i" }}{% endwith %}</span>
             <br>
             <div id="map2"></div>
         </div>
@@ -51,38 +51,38 @@ Air Pollution - 전국 미세먼지 현황
 
       // initialize the map
       var map = L.map('map',{
-            minZoom: 3,
-            maxZoom: 10,
-            center:[36.475569,127.9903603],
-            zoom:7
+            minZoom: 10,
+            maxZoom: 15,
+            center:[37.56865, 126.998083],
+            zoom:10
             });
 
       // load a tile layer
       L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         {
           attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-          maxZoom: 10,
-          minZoom: 3
+          minZoom: 10,
+          maxZoom: 15,
         }).addTo(map);
-      var heat = L.heatLayer([{% for data in recent_data %}[{{ data.stnfk.dmx }},{{ data.stnfk.dmy }},{{ data.pm25value }}],{% endfor %}], { radius: 35, max:200 });;
+      var heat = L.heatLayer([{% for data in recent_data %}[{{ data.stnfk.dmx }},{{ data.stnfk.dmy }},{{ data.pm25value }}],{% endfor %}], { radius: 35, max:100 });;
       map.addLayer(heat);
 
       // initialize the map
       var map2 = L.map('map2',{
-            minZoom: 3,
-            maxZoom: 10,
-            center:[36.475569,127.9903603],
-            zoom:7
+            minZoom: 10,
+            maxZoom: 15,
+            center:[37.56865, 126.998083],
+            zoom:10
             });
 
       // load a tile layer
       L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         {
           attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-          maxZoom: 10,
-          minZoom: 3
+          minZoom: 10,
+          maxZoom: 15,
         }).addTo(map2);
-      var heat = L.heatLayer([{% for data in forecast_data %}[{{ data.stnfk.dmx }},{{ data.stnfk.dmy }},{{ data.pm25value }}],{% endfor %}], { radius: 35, max:200 });;
+      var heat = L.heatLayer([{% for data in forecast_data %}[{{ data.lat }},{{ data.lon }},{{ data.predValue | floatformat:"0"}}],{% endfor %}], { radius: 35, max:100 });;
       map2.addLayer(heat);
 
 

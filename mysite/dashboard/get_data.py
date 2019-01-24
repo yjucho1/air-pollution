@@ -32,7 +32,6 @@ def my_to_datetime(date_str):
 
 if __name__ == "__main__":
 
-    ## 2. 대기오염 정보 가져오기
     cols = ['dataTime', 'mangName', 'so2Value',
             'coValue', 'o3Value', 'no2Value', 'pm10Value',
             'pm10Value24', 'pm25Value', 'pm25Value24', 'khaiValue',
@@ -75,6 +74,8 @@ if __name__ == "__main__":
         try:
             df.dataTime = df.dataTime.apply(my_to_datetime)
             df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric, errors='coerce')
+            df = df.loc[df.dataTime >= (dt.datetime.now().replace(microsecond=0, second=0, minute=0)
+                                       - dt.timedelta(hours=1))]
             df.to_sql('dashboard_airkoreadata', con=con, if_exists='append', index=False)
         except:
             pass

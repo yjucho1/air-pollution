@@ -106,8 +106,7 @@ Air Pollution - {{ last.stnfk.stationname }}
   var myChart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: [{% for data in recent_data %}'{{ data.datatime |date:"m/d H:i"}}',{% endfor %}
-                {% for data in forecast_dt %}'{{ data |date:"m/d H:i"}}',{% endfor %}],
+      labels: [{% for data in recent_data %}'{{ data.datatime |date:"m/d H:i"}}',{% endfor %}],
       datasets: [{
         label: "PM2.5",
         data: [{% for data in recent_data %}'{{ data.pm25value }}',{% endfor %}],
@@ -116,16 +115,6 @@ Air Pollution - {{ last.stnfk.stationname }}
         borderColor: '#999',
         borderWidth: 4,
         pointBackgroundColor: '#999'
-      },
-      {
-        label: "forecast - PM 2.5",
-        data: [{% for data in recent_data %}'-',{% endfor %}
-        {% for data in forecast %}'{{ data }}',{% endfor %}],
-        fill: false,
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(255, 99, 132)',
-        borderWidth: 4,
-        pointBackgroundColor: 'rgb(255, 99, 132)'
       },
       {
         label: "PM10",

@@ -144,17 +144,17 @@ USE_TZ = False
 # static files
 STATIC_URL = '/static/'
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_ACCESS_KEY_ID = get_env_variable("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = get_env_variable("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = get_env_variable("BUCKET_NAME")
-AWS_DEFAULT_ACL = 'public-read'
-AWS_REGION = 'ap-northeast-2' # 여기 지역명이 다르면 어드민 뻑난다.
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# AWS_ACCESS_KEY_ID = get_env_variable("AWS_ACCESS_KEY_ID")
+# AWS_SECRET_ACCESS_KEY = get_env_variable("AWS_SECRET_ACCESS_KEY")
+# AWS_STORAGE_BUCKET_NAME = get_env_variable("BUCKET_NAME")
+# AWS_DEFAULT_ACL = 'public-read'
+# AWS_REGION = 'ap-northeast-2' # 여기 지역명이 다르면 어드민 뻑난다.
+# AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
+# AWS_S3_OBJECT_PARAMETERS = {
+#     'CacheControl': 'max-age=86400',
+# }
 
 #
 STATIC_DIR = os.path.join(BASE_DIR, 'static')

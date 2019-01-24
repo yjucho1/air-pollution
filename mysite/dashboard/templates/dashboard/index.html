@@ -79,26 +79,28 @@ Air Pollution Dashboard
     </div>
   </div>
 
-  <h3>Map</h3>
-      <div class="container">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Stations</h1>
+    </div>
+     <div class="container">
         <div id="map"></div>
       </div>
     <script>
 
       // initialize the map
       var map = L.map('map',{
-            minZoom: 3,
-            maxZoom: 10,
-            center:[36.475569,127.9903603],
-            zoom:7
+            minZoom: 10,
+            maxZoom: 15,
+            center:[37.56865, 126.998083],
+            zoom:11
             });
 
       // load a tile layer
       L.tileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         {
           attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-          maxZoom: 10,
-          minZoom: 3
+          maxZoom: 15,
+          minZoom: 10
         }).addTo(map);
       {% for station in stations %}
       var content = `<h3>{{station.stationname}}</h3><p>{{station.addr}}</p><p>{{station.item}}</p><a href='detail/{{station.stationname}}'>상세보기</a>`;
