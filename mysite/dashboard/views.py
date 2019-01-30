@@ -65,4 +65,3 @@ def overall_map(request):
     forecast_data = PredData.objects.filter(dataTime__range=(yesterday, yesterday + dt.timedelta(hours=1))).filter(predValue__gt=1)
 
     return render(request, "dashboard/map.html", {'recent_data' : recent_data, 'forecast_data':forecast_data})
-

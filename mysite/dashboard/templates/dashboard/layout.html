@@ -21,78 +21,61 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{% url 'index' %}">Korea Air Pollution</a>
-      <ul class="navbar-nav px-3">
-        <li class="nav-item text-nowrap">
-          <a class="nav-link" href="#"><i class="fas fa-user"> Sign out</i></a>
-        </li>
-      </ul>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <a class="navbar-brand px-3" href="{% url 'index' %}">Korea Air Pollution</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto ">
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'index' %}">
+            Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'list_table' or request.resolver_match.url_name == 'detail' %}active{% endif %}" href="{% url 'list_table' 'total' %}">
+            Stations
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'map' %}active{% endif %}" href="{% url 'map' %}">
+            Maps
+            </a>
+          </li>
+        </ul>
+        <ul class="navbar-nav mr-2 ">
+          <li class="nav-item ">
+            {% if user.is_active %}
+            <a class="nav-link" href="{%url 'logout' %}">
+              <span data-feather="user"></span>{{user.username}}</a>
+            {% else %}
+            <a class="nav-link" href="{% url 'login' %}">
+              <span data-feather="user"></span>LOGIN</a>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
     </nav>
-
-    <div class="container-fluid">
-      <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-          <div class="sidebar-sticky">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" href="{% url 'index' %}">
-                  <span data-feather="home"></span>
-                  Dashboard
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'list_table' or request.resolver_match.url_name == 'detail' %}active{% endif %}" href="{% url 'list_table' 'total'%}">
-                  <span data-feather="file"></span>
-                  Stations
-                </a>
-              </li>
-
-              <!--<li class="nav-item">-->
-                <!--<a class="nav-link {% if request.resolver_match.url_name == 'stat' %}active{% endif %}" href="{% url 'stat' %}">-->
-                  <!--<span data-feather="bar-chart-2"></span>-->
-                  <!--Reports-->
-                <!--</a>-->
-              <!--</li>-->
-              <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'map' %}active{% endif %}" href="{% url 'map' %}">
-                  <span data-feather="map"></span>
-                    Maps
-                </a>
-              </li>
-            </ul>
-
-            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-              <span>Saved reports</span>
-              <a class="d-flex align-items-center text-muted" href="#">
-                <span data-feather="plus-circle"></span>
-              </a>
-            </h6>
-            <ul class="nav flex-column mb-2">
-            </ul>
-            <div class="footer">
-              <img src="https://www.data.go.kr/assets/widgetAssets/img/content/lic_by.gif" alt="저작자표시">
-              <img src="https://www.data.go.kr/assets/widgetAssets/img/content/lic_open1.gif" alt="출처표시"><br>
-              <small>© 2019. YJUCHO. all rights reserved.</small><br>
-              <p></p>
-            </div>
-          </div>
-        </nav>
-
 
         {% block main %}{% endblock %}
 
-      </div>
-
-
-    </div>
+    <div class="container footer">
+        <img src="https://www.data.go.kr/assets/widgetAssets/img/content/lic_by.gif" alt="저작자표시">
+        <img src="https://www.data.go.kr/assets/widgetAssets/img/content/lic_open1.gif" alt="출처표시"><br>
+        <small>© 2019. YJUCHO. all rights reserved.</small><br>
+        <p></p>
+     </div>
 
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-
+    <script>window.jQuery || document.write('<script src="{% static 'dashboard/jquery-slim.min.js' %}"><\/script>')</script>
+    <script src="{% static 'dashboard/popper.min.js' %}"></script>
+    <script src="{% static 'dashboard/bootstrap.min.js' %}"></script>
 
     <!-- Icons -->
     <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
