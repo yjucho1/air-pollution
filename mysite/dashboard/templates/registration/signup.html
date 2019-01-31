@@ -1,0 +1,18 @@
+{% extends "dashboard/layout.html" %}
+
+{% block title %}
+회원가입
+{% endblock %}
+
+{% block main %}
+
+<main role="main" class="container pb-5">
+    <form method="post" action="{% url 'signup' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">회원가입</button>
+    </form>
+
+</main>
+
+{% endblock %}

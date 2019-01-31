@@ -48,7 +48,7 @@
         <ul class="navbar-nav mr-2 ">
           <li class="nav-item ">
             {% if user.is_active %}
-            <a class="nav-link" href="{%url 'logout' %}">
+            <a class="nav-link" href="{% url 'logout' %}">
               <span data-feather="user"></span>{{user.username}}</a>
             {% else %}
             <a class="nav-link" href="{% url 'login' %}">

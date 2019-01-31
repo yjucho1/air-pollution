@@ -3,7 +3,13 @@ from .models import AirKoreaStations, AirKoreaData, PredData
 import datetime as dt
 from django.db.models import Count
 from django.db.models.functions import Substr
+from django.views.generic import TemplateView
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
+from .forms import SignUpForm
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def index(request):
     yesterday = dt.datetime.now().replace(microsecond=0,second=0,minute=0, hour=0)
     num_of_stations = AirKoreaData.objects.filter(datatime__range=(yesterday - dt.timedelta(days=1), yesterday)).\
@@ -25,7 +31,7 @@ def index(request):
     return render(request, "dashboard/index.html", context)
 
 
-
+@login_required
 def detail(request, station_name):
     yesterday = dt.datetime.now().replace(microsecond=0, second=0, minute=0)
     recent_data = AirKoreaData.objects.filter(stnfk__stationname=station_name).\
@@ -33,7 +39,7 @@ def detail(request, station_name):
 
     return render(request, "dashboard/detail.html", {'recent_data': recent_data})
 
-
+@login_required
 def list_table(request, status):
     yesterday = dt.datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
     if status == 'polluted':
@@ -53,15 +59,25 @@ def list_table(request, status):
 
     return render(request, "dashboard/list.html", {"status": status, "Stations": stations})
 
+@login_required
 def stations_stat(request):
     mangname_count = AirKoreaStations.objects.values('mangname').annotate(total=Count('mangname')).order_by('-total')
     area_count = AirKoreaStations.objects.values('addr').annotate(area=Substr('addr', 1, 2)).values('area').annotate(total=Count('area')).order_by('-total')
 
     return render(request, "dashboard/stat.html", {"mangname_count": mangname_count, "area_count" :area_count})
 
+@login_required
 def overall_map(request):
     yesterday = dt.datetime.now().replace(microsecond=0, second=0, minute=0)
     recent_data = AirKoreaData.objects.filter(datatime__range=(yesterday - dt.timedelta(hours=1), yesterday)).exclude(pm25value__isnull=True).order_by('datatime')
     forecast_data = PredData.objects.filter(dataTime__range=(yesterday, yesterday + dt.timedelta(hours=1))).filter(predValue__gt=1)
 
     return render(request, "dashboard/map.html", {'recent_data' : recent_data, 'forecast_data':forecast_data})
+
+class CreateUserView(CreateView):
+    template_name = 'registration/signup.html'
+    form_class = SignUpForm
+    success_url = reverse_lazy('create_user_done')
+
+class RegisteredView(TemplateView):
+    template_name = 'registration/signup_done.html'
